@@ -58,7 +58,6 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
   }, [auth, navigate]);
 
   useEffect(() => {
-    // Load tasks according to selected card when tasks change
     switch (selectedCard) {
       case "assigned":
         setDisplayedTasks(tasks);
@@ -192,7 +191,7 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
 
   const handleeditCloseModal = () => {
     setIseditModalOpen(false);
-    setCurrentTask(null); // Clear current task after closing modal
+    setCurrentTask(null); 
   };
 
   const handleDuplicateTask = async (taskId: string) => {
