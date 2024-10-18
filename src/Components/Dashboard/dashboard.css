@@ -196,6 +196,9 @@ ul {
 body.dark .pages {
   color: #ccc;
 }
+.sidebar-closed .card {
+  max-width: 350px;
+}
 /* media querys */
 @media (max-width: 1000px) {
   nav {

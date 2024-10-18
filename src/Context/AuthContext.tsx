@@ -3,11 +3,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { message } from "antd";
 import baseURL from "../config";
-import { AuthContextType } from "../Types/Task"; 
+import { AuthContextType } from "../Types/Auth";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -24,10 +26,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         },
       };
 
-      const response = await axios.post(`${baseURL}api/users/login`, body, config);
+      const response = await axios.post(
+        `${baseURL}api/users/login`,
+        body,
+        config
+      );
       const { token, user } = response.data;
       localStorage.setItem("login", JSON.stringify({ token, user }));
-     
 
       setIsAuthenticated(true);
       message.success("Login Successful");
@@ -50,7 +55,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("token");
-    localStorage.removeItem("userData")
+    localStorage.removeItem("userData");
     message.success("Logged out successfully.");
     navigate("/");
   };

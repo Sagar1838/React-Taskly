@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import { Task, User, AddTaskContextType } from "../Types/Task";
+import {User, AddTaskContextType } from "../Types/AddTask";
+import { Task } from "../Types/Task";
 import { message } from "antd";
 import baseURL from "../config";
 

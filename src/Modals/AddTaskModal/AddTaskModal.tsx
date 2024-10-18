@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import "./addtaskmodal.css";
 import React from "react";
 import { useAddTask } from "../../Context/AddTaskContext";
-import { AddTaskModalProps } from "../../Types/Task";
+import { AddTaskModalProps } from "../../Types/AddTask";
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
   const { addTask, fetchUsers, users } = useAddTask();
