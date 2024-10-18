@@ -1,0 +1,12 @@
+.main-container {
+  display: flex;
+}
+
+.main-container.sidebar-closed .dashboard-container {
+  width: -webkit-fill-available;
+  margin-left: -250px;
+}
+
+.main-container .dashboard-container {
+  width: calc(100%);
+}

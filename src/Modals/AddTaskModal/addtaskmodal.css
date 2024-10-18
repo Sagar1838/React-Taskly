@@ -1,0 +1,183 @@
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 500px;
+  max-width: 90%;
+  max-height: 90vh;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.add-task-modal {
+  height: auto;
+  width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.add-task-modal::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.modal h2 {
+  margin-top: 0;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+.modal label {
+  display: block;
+  margin: 10px 0 5px;
+  font-weight: 500;
+}
+
+.submit-button,
+.close-button {
+  margin-top: 10px;
+  height: 50px;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+.close-button {
+  background-color: #dc3545;
+}
+.close-button:hover {
+  background-color: #c82333;
+}
+.error {
+  color: #dc3545;
+  font-size: 14px;
+}
+
+.main-title h1 {
+  color: var(--text-color);
+}
+
+body.dark .main-title h1 {
+  color: var(--black-light-color);
+}
+
+.add-task-modal {
+  height: 800px;
+  width: 800px;
+}
+
+.addadmin {
+  max-width: 70%;
+  margin: auto;
+  padding: 20px;
+  background-color: var(--addadminform-color);
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  margin-top: 20px;
+}
+
+.addadmin h4 {
+  padding-bottom: 20px;
+  color: var(--text-color);
+}
+
+.addadmin label.form-label {
+  color: var(--text-color);
+}
+
+.addadmin input.form-control,
+.addadmin select.form-select,
+.addadmin textarea.form-control {
+  background-color: var(--panel-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
+  border-width: 1px;
+}
+
+select.form-select {
+  height: 3rem;
+}
+
+.addadmin input#inputAddress::placeholder {
+  color: var(--black-light-color);
+}
+
+.addadmin button[type="submit"] {
+  height: 3rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.25rem;
+}
+
+.upload-label {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.dark-mode .upload-label {
+  background-color: #333;
+  color: #f0f0f0;
+}
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+textarea,
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+button[type="submit"] {
+  background-color: #4caf50;
+  color: #ffffff;
+}
+
+button:hover {
+  opacity: 0.9;
+}

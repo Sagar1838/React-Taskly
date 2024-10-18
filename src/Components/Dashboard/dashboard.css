@@ -1,0 +1,742 @@
+/* ===== Google Font Import - Poppins ===== */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+:root {
+  --primary-color: #0e4bf1;
+  --panel-color: #f8f8f8;
+  --text-color: #000;
+  --black-light-color: #707070;
+  --border-color: #dedede;
+  --toggle-color: #d0d0d0;
+  --title-icon-color: #f8f8f8;
+  --addadminform-color: #e9e9e9;
+  --filter: brightness(0) invert(0);
+  --tran-05: all 0.5s ease;
+  --tran-03: all 0.3s ease;
+  --tran-03: all 0.2s ease;
+}
+
+body.dark {
+  --primary-color: #3a3b3c;
+  --panel-color: #242526;
+  --text-color: #ccc;
+  --black-light-color: #ccc;
+  --border-color: #4d4c4c;
+  --toggle-color: #fff;
+  --title-icon-color: #ccc;
+  --addadminform-color: #3a3b3c;
+  --filter: brightness(0) invert(1);
+}
+
+/* === Custom Scroll Bar CSS === */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: gray;
+}
+
+body.dark::-webkit-scrollbar-thumb:hover,
+body.dark .activity-data::-webkit-scrollbar-thumb:hover {
+  background: #3a3b3c;
+}
+
+.dashboard {
+  position: relative;
+  left: 250px;
+  background-color: var(--panel-color);
+  min-height: 100vh;
+  width: calc(100% - 250px);
+  padding: 10px 14px;
+  transition: var(--tran-05);
+}
+
+nav.close ~ .dashboard {
+  left: 73px;
+  width: calc(100% - 73px);
+}
+
+.dashboard .top {
+  position: fixed;
+  top: 0;
+  left: 250px;
+  display: flex;
+  width: calc(100% - 250px);
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  /* background-color: var(--panel-color); */
+  transition: var(--tran-05);
+  z-index: 10;
+}
+
+nav.close ~ .dashboard .top {
+  left: 73px;
+  width: calc(100% - 73px);
+}
+
+.dashboard .top .sidebar-toggle {
+  font-size: 26px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.dashboard .dash-content {
+  padding-top: 0;
+}
+
+.dash-content .title {
+  display: flex;
+  align-items: center;
+  margin: 30px 0 30px 0;
+}
+
+.dash-content .title i {
+  position: relative;
+  height: 35px;
+  width: 35px;
+  background-color: var(--primary-color);
+  border-radius: 6px;
+  color: var(--title-icon-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.dash-content .title .text {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-left: 10px;
+}
+
+.dashboard-container {
+  margin-left: auto;
+  transition: width 0.3s ease;
+}
+
+.dash-content .activity .activity-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.activity .activity-data {
+  display: flex;
+}
+
+.activity-data .data {
+  display: flex;
+  flex-direction: column;
+  margin: 0 15px;
+}
+
+.activity-data .data-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.activity-data .data .data-list {
+  font-size: 18px;
+  font-weight: 400;
+  margin-top: 20px;
+  white-space: nowrap;
+  color: var(--text-color);
+}
+
+ol,
+ul {
+  padding-left: 0rem;
+}
+
+.react-tel-input .country-list {
+  outline: none;
+  z-index: 1;
+  list-style: none;
+  position: absolute;
+  /* padding: 0; */
+  margin: 10px 0 10px -1px;
+  box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.35);
+  background-color: white;
+  width: 300px;
+  height: 200px;
+  overflow-y: scroll;
+  border-radius: 0 0 3px 3px;
+  overflow-x: hidden;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: 100%;
+}
+body.dark .pages {
+  color: #ccc;
+}
+/* media querys */
+@media (max-width: 1000px) {
+  nav {
+    width: 73px;
+  }
+
+  nav .logo-image img {
+    width: 100%;
+  }
+  nav.close .logo-image img {
+    width: 70%;
+  }
+
+  nav.close {
+    width: 250px;
+  }
+
+  nav .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close .logo_name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close li a .link-name {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  nav ~ .dashboard {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav.close ~ .dashboard {
+    left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  nav ~ .dashboard .top {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav.close ~ .dashboard .top {
+    left: 250px;
+    width: calc(100% - 250px);
+  }
+
+  .activity .activity-data {
+    overflow-x: scroll;
+  }
+}
+
+@media (max-width: 780px) {
+  .dash-content .boxes .box {
+    width: calc(100% / 2 - 15px);
+    margin-top: 15px;
+  }
+  nav .logo-image img {
+    width: 100%;
+  }
+
+  nav.close .logo-image img {
+    width: 70%;
+  }
+}
+
+@media (max-width: 560px) {
+  .dash-content .boxes .box {
+    width: 100%;
+  }
+  nav .logo-image img {
+    width: 100%;
+  }
+  nav.close .logo-image img {
+    width: 70%;
+  }
+}
+
+@media (min-width: 320px) and (max-width: 480px) {
+  nav {
+    width: 0px;
+  }
+
+  nav.close {
+    width: 73px;
+  }
+
+  nav .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close .logo_name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav.close li a .link-name {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  nav ~ .dashboard {
+    left: 0;
+    width: 100%;
+  }
+
+  nav.close ~ .dashboard {
+    left: 73px;
+    width: calc(100% - 73px);
+  }
+
+  nav ~ .dashboard .top {
+    left: 0;
+    width: 100%;
+  }
+
+  nav.close ~ .dashboard .top {
+    left: 0;
+    width: 100%;
+  }
+}
+
+/* add task button */
+.add-task-container {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+}
+.add-task-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #0e4bf1;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Individual card */
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 20px;
+}
+
+.card {
+  flex: 1 1 200px;
+  margin: 10px;
+  max-width: 300px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, border 0.2s ease-in-out;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex: 1 1 100%;
+    max-width: none;
+    margin: 5px;
+  }
+}
+
+.card:hover {
+  transform: scale(1.05);
+  border: 1px solid #0e4bf1;
+}
+
+.card.selected {
+  border: 2px solid #0e4bf1;
+  background-color: #f0f8ff;
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  color: #0e4bf1;
+}
+
+.text {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+}
+
+.number {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* dashboard.css */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+}
+
+.task-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  background-color: #fff;
+}
+
+.task-table thead th {
+  padding: 12px 15px;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #f9f9f9;
+  color: #333;
+  border-bottom: 2px solid #ddd;
+}
+
+.task-table tbody td {
+  padding: 10px 15px;
+  color: #666;
+  border-bottom: 1px solid #ddd;
+}
+
+.task-table tbody tr:hover {
+  background-color: #f4f4f4;
+}
+
+.task-table tbody td button {
+  padding: 6px 10px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #007bff;
+  cursor: pointer;
+}
+
+.task-table tbody td button:hover {
+  background-color: #0056b3;
+}
+
+.task-table tbody td .delete-btn {
+  background-color: #dc3545;
+}
+
+.task-table tbody td .delete-btn:hover {
+  background-color: #c82333;
+}
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #6c757d;
+}
+
+.pagination span {
+  margin: 0 10px;
+  line-height: 30px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .task-table thead {
+    display: none;
+  }
+
+  .task-table tbody tr {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  .task-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+
+  .task-table tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    width: 50%;
+  }
+
+  .task-table tbody td[data-label="Actions"] {
+    display: block;
+    text-align: center;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+}
+
+.task-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.task-table tbody tr:hover {
+  background-color: #e0f7fa;
+}
+
+.task-table thead th {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 15px;
+  border-bottom: 2px solid #0056b3;
+}
+
+.task-table tbody td {
+  border-bottom: 1px solid #ddd;
+}
+
+.task-table {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+}
+
+.task-table tbody td[data-status="PENDING"] {
+  color: #ffc107;
+}
+
+.task-table tbody td[data-status="IN_PROGRESS"] {
+  color: #fd7e14;
+}
+
+.task-table tbody td[data-status="COMPLETED"] {
+  color: #28a745;
+}
+
+.task-table tbody td button {
+  background-color: #007bff;
+  color: white;
+}
+
+.task-table tbody td .delete-btn {
+  background-color: #dc3545;
+}
+
+.task-table tbody td .edit-btn {
+  background-color: #17a2b8;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.overlay.active {
+  display: flex;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Extra Small Devices (Portrait Phones, Less than 576px) */
+@media (max-width: 575.98px) {
+  .dashboard {
+    width: 100%;
+    left: 0;
+  }
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+  .task-table tbody tr {
+    display: block;
+    padding: 15px;
+  }
+  .pagination {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+/* Small Devices (Portrait Tablets, Less than 768px) */
+@media (max-width: 767.98px) {
+  .dashboard {
+    width: 100%;
+    left: 0;
+  }
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .task-table tbody tr {
+    display: flex;
+    flex-direction: column;
+  }
+  .task-table tbody td {
+    padding: 10px 0;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+
+/* Medium Devices (Tablets, Less than 992px) */
+@media (max-width: 991.98px) {
+  .cards-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .dashboard {
+    padding: 10px;
+  }
+  .pagination {
+    justify-content: center;
+  }
+}
+
+/* Large Devices (Desktops, Less than 1200px) */
+@media (max-width: 1199.98px) {
+  .cards-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .task-table thead {
+    font-size: 0.9rem;
+  }
+  .task-table tbody td {
+    font-size: 0.9rem;
+  }
+}
+
+/* Extra Large Devices (Large Desktops, 1200px and Above) */
+@media (min-width: 1200px) {
+  .cards-container {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .task-table tbody td {
+    padding: 10px;
+  }
+}
+
+/* Adjusting Card and Table Styles Based on Screen Size */
+@media (max-width: 768px) {
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 768px) {
+  .task-table tbody tr {
+    display: flex;
+    flex-direction: column;
+  }
+  .task-table tbody td {
+    padding: 8px;
+  }
+}
+
+/* Adjust Task Table on Small Screens */
+@media (max-width: 768px) {
+  .task-table {
+    border: none;
+  }
+  .task-table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+  }
+  .task-table tbody td {
+    display: block;
+    text-align: left;
+  }
+  .task-table tbody td::before {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .pagination {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Responsive Add Task Button */
+@media (max-width: 576px) {
+  .add-task-btn {
+    width: 100%;
+    font-size: 1rem;
+    text-align: center;
+  }
+}
+
+@media (min-width: 576px) {
+  .add-task-btn {
+    width: auto;
+    font-size: 0.875rem;
+  }
+}
+
+/* Loader for All Screens */
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 575.98px) {
+  .loader-container {
+    flex-direction: column;
+  }
+}
