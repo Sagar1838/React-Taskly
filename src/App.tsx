@@ -1,10 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "./Components/Login/Login";
-import Main from "./Pages/Main";
+import React, { Suspense, lazy } from "react";
 import { AuthProvider } from "./Context/AuthContext";
 import { TaskProvider } from "./Context/TaskContext";
 import { AddTaskProvider } from "./Context/AddTaskContext";
 import { EditTaskProvider } from "./Context/EditTaskContext";
+
+const Login = lazy(() => import("./Components/Login/Login"));
+const Main = lazy(() => import("./Pages/Main"));
 
 function App() {
   return (
@@ -13,10 +15,12 @@ function App() {
         <TaskProvider>
           <AddTaskProvider>
             <EditTaskProvider>
-              <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/dashboard" element={<Main />} />
-              </Routes>
+              <Suspense fallback={<div></div>}>
+                <Routes>
+                  <Route path="/" element={<Login />} />
+                  <Route path="/dashboard" element={<Main />} />
+                </Routes>
+              </Suspense>
             </EditTaskProvider>
           </AddTaskProvider>
         </TaskProvider>

@@ -4,7 +4,6 @@ import { useTaskContext } from "../../Context/TaskContext";
 import Login from "../Login/Login";
 import AddTaskModal from "../../Modals/AddTaskModal/AddTaskModal";
 import { Task } from "../../Types/Task";
-// import { Task } from "../../Types/Task";
 import EditTaskModal from "../../Modals/EditTaskModal/EditTaskModal";
 import {
   FaUsers,

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, FC } from "react";
 import { useEditTask } from "../../Context/EditTaskContext";
 import { useAddTask } from "../../Context/AddTaskContext";
-import { EditTaskModalProps, Task } from "../../Types/Task";
+import { Task } from "../../Types/Task";
+import { EditTaskModalProps } from "../../Types/EditTask";
 import { useFormik } from "formik";
 import "./edittaskmodal.css";
 

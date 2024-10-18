@@ -1,15 +1,46 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+} from "react";
 import axios from "axios";
 import { Task } from "../Types/Task";
 import baseURL from "../config";
 import { message } from "antd";
-import { TaskContextType } from "../Types/Task";
 
+interface TaskContextType {
+  //Store the tasks
+  tasks: Task[];
+  createdTasks: Task[];
+  todayTasks: Task[];
+  overdueTasks: Task[];
+  completedTasks: Task[];
+  loading: boolean;
+  error: string | null;
+  //Fethc the tasks
+  fetchCreatedTasks: () => Promise<void>;
+  fetchTodayTasks: () => Promise<void>;
+  fetchOverdueTasks: () => Promise<void>;
+  fetchCompletedTasks: () => Promise<void>;
+  duplicateTask: (taskId: string) => Promise<void>;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
+  updateTaskStatus: (
+    taskId: string,
+    newStatus: "COMPLETED" | "PENDING" | "IN_PROGRESS"
+  ) => Promise<void>;
+  deleteTask: (taskId: string) => Promise<void>;
+}
+
+// Create the task context
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
+// TaskProvider component which wraps the app and provides task data and functionality to children components
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  // State to store various task lists and loading/error states
   const [tasks, setTasks] = useState<Task[]>([]);
   const [createdTasks, setCreatedTasks] = useState<Task[]>([]);
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
@@ -22,6 +53,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const token = loginData.token;
   const userId = loginData.user?.id;
 
+  // Retrieve the authentication token and userId from local storage
   const handleErrorResponse = (err: any) => {
     if (err.response) {
       const { data } = err.response;
@@ -33,6 +65,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Fetch all tasks assigned to the current user
   const fetchTasks = async () => {
     if (!token || !userId) {
       console.error("No authentication token or user ID found.");
@@ -43,6 +76,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       const response = await axios.get(`${baseURL}api/task/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      // Map API response data into the Task structure
       const fetchedTasks: Task[] = response.data.data.map((task: any) => ({
         id: task.id,
         title: task.title,
@@ -62,6 +96,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Fetch tasks created by the current user
   const fetchCreatedTasks = async () => {
     if (!token || !userId) {
       console.error("No authentication token or user ID found.");
@@ -78,7 +113,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
           TaskCreatedBy: userId,
         },
       });
-
+      // Check if the response is valid and update the createdTasks state
       if (response.data && Array.isArray(response.data.data)) {
         const fetchedCreatedTasks: Task[] = response.data.data.map(
           (task: any) => ({
@@ -98,8 +133,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        setCreatedTasks([]); // Set createdTasks to empty array
-        // message.warning("No created tasks found."); // Show a message to the user
+        setCreatedTasks([]);
       } else {
         handleErrorResponse(err);
       }
@@ -108,6 +142,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Fetch today tasks
   const fetchTodayTasks = async () => {
     if (!token || !userId) return;
 
@@ -132,16 +167,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
             status: Array.isArray(task.status) ? task.status : [task.status],
           }))
         : [];
-
       setTodayTasks(fetchedTodayTasks);
-
       if (fetchedTodayTasks.length === 0) {
         message.info("No tasks found for today.");
       }
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        setTodayTasks([]); // Set todayTasks to empty array
-        // message.warning("No tasks found for today."); // Show a message to the user
+        setTodayTasks([]);
       } else {
         handleErrorResponse(err);
       }
@@ -150,6 +182,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Fetch overdue tasks
   const fetchOverdueTasks = async () => {
     if (!token || !userId) return;
     setLoading(true);
@@ -171,12 +204,12 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
           status: Array.isArray(task.status) ? task.status : [task.status],
         })
       );
+      console.log("response--------", response);
 
       setOverdueTasks(fetchedOverdueTasks);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        setOverdueTasks([]); // Set overdueTasks to empty array
-        // message.warning("No overdue tasks found."); // Show a message to the user
+        setOverdueTasks([]);
       } else {
         handleErrorResponse(err);
       }
@@ -185,6 +218,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Fetch completed tasks
   const fetchCompletedTasks = async () => {
     if (!token || !userId) return;
     setLoading(true);
@@ -203,15 +237,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
           estimatedHours: task.estimatedHours,
           createdBy: task.createdBy,
           assignedTo: task.assignedTo.name,
-
           status: Array.isArray(task.status) ? task.status : [task.status],
         })
       );
       setCompletedTasks(fetchedCompletedTasks);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        setCompletedTasks([]); // Set completedTasks to empty array
-        // message.warning("No completed tasks found."); // Show a message to the user
+        setCompletedTasks([]);
       } else {
         handleErrorResponse(err);
       }
@@ -220,6 +252,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // On component mount, fetch all tasks and their categories
   useEffect(() => {
     if (token && userId) {
       fetchTasks();
@@ -230,6 +263,17 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [token, userId]);
 
+  // Memoize tasks to optimize re-renders
+  const memoizedTasks = useMemo(() => tasks, [tasks]);
+  const memoizedCreatedTasks = useMemo(() => createdTasks, [createdTasks]);
+  const memoizedTodayTasks = useMemo(() => todayTasks, [todayTasks]);
+  const memoizedOverdueTasks = useMemo(() => overdueTasks, [overdueTasks]);
+  const memoizedCompletedTasks = useMemo(
+    () => completedTasks,
+    [completedTasks]
+  );
+
+  //For create duplicate task
   const duplicateTask = async (taskId: string) => {
     if (!token || !userId) return;
     setLoading(true);
@@ -256,7 +300,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        // message.warning("Task not found for duplication."); // Show a message to the user
       } else {
         handleErrorResponse(err);
       }
@@ -265,6 +308,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  //For update the task status
   const updateTaskStatus = async (
     taskId: string,
     newStatus: "COMPLETED" | "PENDING" | "IN_PROGRESS"
@@ -291,7 +335,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        // message.warning("Task not found for updating status."); // Show a message to the user
       } else {
         handleErrorResponse(err);
       }
@@ -300,6 +343,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  //For delete the task
   const deleteTask = async (taskId: string) => {
     if (!token || !userId) return;
     setLoading(true);
@@ -319,7 +363,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
-        // message.warning("Task not found for deletion."); // Show a message to the user
       } else {
         handleErrorResponse(err);
       }
@@ -328,14 +371,16 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Provide the task context to children components
   return (
+    // Context provider value that will be passed to consumers
     <TaskContext.Provider
       value={{
-        tasks,
-        createdTasks,
-        todayTasks,
-        overdueTasks,
-        completedTasks,
+        tasks: memoizedTasks,
+        createdTasks: memoizedCreatedTasks,
+        todayTasks: memoizedTodayTasks,
+        overdueTasks: memoizedOverdueTasks,
+        completedTasks: memoizedCompletedTasks,
         loading,
         error,
         fetchCreatedTasks,
@@ -353,7 +398,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Custom hook to use the TaskContext
+// Custom hook to access the task context easily
 export const useTaskContext = () => {
   const context = useContext(TaskContext);
   if (context === undefined) {

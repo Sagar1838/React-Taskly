@@ -1,10 +1,3 @@
-export interface AuthContextType {
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
-  isAuthenticated: boolean;
-}
-
-
 export interface Task {
   id: string;
   title: string;
@@ -58,36 +51,4 @@ export interface TaskContextType {
   deleteTask: (taskId: string) => Promise<void>;
 }
 
-export interface User {
-  id: string;
-  name: string;
-}
 
-export interface AddTaskContextType {
-  addTask: (task: Partial<Task>) => Promise<void>;
-  users: User[];
-  fetchUsers: () => Promise<void>;
-}
-
-export interface AddTaskModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSubmit: (
-    taskTitle: string,
-    description: string,
-    assignedTo: string,
-    estimatedTime: string,
-    dueDate: string
-  ) => void;
-}
-
-export interface EditTaskContextType {
-  editTask: (taskId: string, updatedTask: Partial<Task>) => Promise<boolean>;
-}
-
-export interface EditTaskModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  task: Task | null;
-  onSubmit: (updatedTask: Partial<Task>) => void;
-}
