@@ -33,14 +33,11 @@ interface TaskContextType {
   deleteTask: (taskId: string) => Promise<void>;
 }
 
-// Create the task context
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-// TaskProvider component which wraps the app and provides task data and functionality to children components
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // State to store various task lists and loading/error states
   const [tasks, setTasks] = useState<Task[]>([]);
   const [createdTasks, setCreatedTasks] = useState<Task[]>([]);
   const [todayTasks, setTodayTasks] = useState<Task[]>([]);
@@ -53,7 +50,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   const token = loginData.token;
   const userId = loginData.user?.id;
 
-  // Retrieve the authentication token and userId from local storage
   const handleErrorResponse = (err: any) => {
     if (err.response) {
       const { data } = err.response;
