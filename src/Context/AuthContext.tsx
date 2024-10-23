@@ -33,6 +33,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       );
       const { token, user } = response.data;
       localStorage.setItem("login", JSON.stringify({ token, user }));
+      console.log("login data", response);
 
       setIsAuthenticated(true);
       message.success("Login Successful");

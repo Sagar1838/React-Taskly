@@ -13,6 +13,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [hasFocusedInitially, setHasFocusedInitially] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
@@ -112,7 +113,6 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
       formik.resetForm();
       onClose();
       setHasFocusedInitially(false);
-
     },
   });
 
@@ -124,7 +124,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
         setHasFocusedInitially(true);
       }
     }
-  }, [isOpen, fetchUsers,hasFocusedInitially]);
+  }, [isOpen, fetchUsers, hasFocusedInitially]);
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -138,13 +138,33 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
     }
   }, [searchTerm, users]);
 
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(e.target.value);
+  //   formik.setFieldValue("assignee", "");
+  // };
+  // const handleAssigneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const selectedUserId = e.target.value;
+  //   formik.setFieldValue("assignedTo", selectedUserId);
+  // };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    formik.setFieldValue("assignee", "");
+    setIsDropdownOpen(true); // Open dropdown when typing
   };
-  const handleAssigneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedUserId = e.target.value;
-    formik.setFieldValue("assignedTo", selectedUserId);
+
+  const handleOptionClick = (user: { id: string; name: string }) => {
+    formik.setFieldValue("assignedTo", user.id); // Set the assignedTo value
+    setSearchTerm(user.name); // Update the search term
+    setIsDropdownOpen(false); // Close the dropdown
+  };
+
+  const handleInputFocus = () => {
+    setIsDropdownOpen(true); // Open dropdown when input is focused
+  };
+
+  const handleInputBlur = () => {
+    setTimeout(() => {
+      setIsDropdownOpen(false); // Delay closing to allow option click
+    }, 100);
   };
 
   if (!isOpen) return null;
@@ -199,9 +219,10 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
                 </div>
 
                 {/* Assignee input with search */}
+
                 <div className="col-md-6 input-container">
                   <label htmlFor="assignedTo" className="form-label">
-                    assignedTo:
+                    Assigned To:
                   </label>
                   <div className="input-group">
                     <input
@@ -210,28 +231,28 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
                       placeholder="Search assignee..."
                       value={searchTerm}
                       onChange={handleSearchChange}
+                      onFocus={handleInputFocus}
+                      onBlur={handleInputBlur}
                     />
-                    <select
-                      id="assignedTo"
-                      className="form-control mt-2"
-                      value={formik.values.assignedTo}
-                      onChange={handleAssigneeChange}
-                      // {...formik.getFieldProps("assignedTo")}
-                    >
-                      <option value="">Select Assignee</option>
-
-                      {filteredUsers.length > 0 ? (
-                        filteredUsers.map((user) => (
-                          <option key={user.id} value={user.id}>
-                            {user.name}
-                          </option>
-                        ))
-                      ) : (
-                        <option value="" disabled>
-                          No assignee in this list
-                        </option>
-                      )}
-                    </select>
+                    {isDropdownOpen && (
+                      <ul className="dropdown-menu">
+                        {filteredUsers.length > 0 ? (
+                          filteredUsers.map((user) => (
+                            <li
+                              key={user.id}
+                              className="dropdown-item"
+                              onClick={() => handleOptionClick(user)}
+                            >
+                              {user.name}
+                            </li>
+                          ))
+                        ) : (
+                          <li className="dropdown-item no-results">
+                            No users available
+                          </li>
+                        )}
+                      </ul>
+                    )}
                   </div>
                   {formik.touched.assignedTo && formik.errors.assignedTo ? (
                     <div className="error">{formik.errors.assignedTo}</div>
@@ -245,10 +266,16 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
                   </label>
                   <div className="input-group">
                     <input
-                      type="number"
+                      type="text"
                       className="form-control"
                       id="estimatedHours"
                       {...formik.getFieldProps("estimatedHours")}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (/^\d*$/.test(value) || value === "") {
+                          formik.setFieldValue("estimatedHours", value);
+                        }
+                      }}
                     />
                   </div>
                   {formik.touched.estimatedHours &&

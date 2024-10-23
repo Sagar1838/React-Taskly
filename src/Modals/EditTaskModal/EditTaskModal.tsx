@@ -18,6 +18,7 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
   const [filteredUsers, setFilteredUsers] = useState(users);
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [hasFocusedInitially, setHasFocusedInitially] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -154,7 +155,15 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
         : users
     );
   }, [searchTerm, users]);
-  console.log("task----", task);
+
+  const handleUserSelection = (userId: string) => {
+    const selectedUser = users.find((user) => user.id === userId);
+    if (selectedUser) {
+      formik.setFieldValue("assignedTo", selectedUser.id);
+      setSearchTerm(selectedUser.name);
+      setShowDropdown(false);
+    }
+  };
 
   return isOpen ? (
     <div className="modal-overlay">
@@ -189,30 +198,31 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
               <input
                 type="text"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value);
+                  setShowDropdown(true);
+                  formik.getFieldProps("assignedTo");
+                }}
+                onFocus={() => setShowDropdown(true)}
                 placeholder="Search assignee..."
               />
-              <select
-                // value={formik.values.assignedTo}
-                onChange={(e) =>
-                  formik.setFieldValue("assignedTo", e.target.value)
-                }
-                className="form-control mt-2"
-              >
-                <option value="">
-                  {task && task ? task.assignedTo : "Select Assignee"}
-                </option>
-                {/* <option value="">Select Assignee</option> */}
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.name}
-                    </option>
-                  ))
-                ) : (
-                  <option disabled>No users available</option>
-                )}
-              </select>
+              {showDropdown && (
+                <ul className="dropdown-list">
+                  {filteredUsers.length > 0 ? (
+                    filteredUsers.map((user) => (
+                      <li
+                        key={user.id}
+                        className="dropdown-item"
+                        onClick={() => handleUserSelection(user.id)}
+                      >
+                        {user.name}
+                      </li>
+                    ))
+                  ) : (
+                    <li className="no-results">No users available</li>
+                  )}
+                </ul>
+              )}
             </div>
             {formik.touched.assignedTo && formik.errors.assignedTo && (
               <div className="error">{formik.errors.assignedTo}</div>
@@ -221,8 +231,14 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
           <div className="modal-field">
             <label>Estimated Hours</label>
             <input
-              type="number"
+              type="text"
               {...formik.getFieldProps("estimatedHours")}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^\d*$/.test(value) || value === "") {
+                  formik.setFieldValue("estimatedHours", value);
+                }
+              }}
               placeholder="Estimated Hours"
             />
             {formik.touched.estimatedHours && formik.errors.estimatedHours && (

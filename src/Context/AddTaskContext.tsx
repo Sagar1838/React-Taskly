@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import axios from "axios";
-import {User, AddTaskContextType } from "../Types/AddTask";
+import { User, AddTaskContextType } from "../Types/AddTask";
 import { Task } from "../Types/Task";
 import { message } from "antd";
 import baseURL from "../config";
@@ -41,6 +41,7 @@ export const AddTaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addTask = async (task: Partial<Task>) => {
     try {
+      // const response = await axios.post(`${baseURL}api/task`, task, {
       const response = await axios.post(`${baseURL}api/task`, task, {
         headers: {
           Authorization: `Bearer ${token}`,
