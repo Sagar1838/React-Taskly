@@ -743,3 +743,57 @@ body.dark .pages {
     flex-direction: column;
   }
 }
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+  flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+}
+
+.pagination li {
+  margin: 0 5px;
+}
+
+.pagination a {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 16px; /* Base font size */
+  transition: background-color 0.3s;
+}
+
+.pagination .active a {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
+.pagination a:hover {
+  background-color: #ddd;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .pagination a {
+    padding: 6px 12px; /* Slightly smaller padding for smaller screens */
+    font-size: 14px; /* Reduce font size for better fit */
+  }
+
+  .pagination li {
+    margin: 0 3px; /* Reduce margins for more space */
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination a {
+    padding: 4px 8px; /* Even smaller padding for very small screens */
+    font-size: 12px; /* Smaller font size for very small screens */
+  }
+
+  .pagination li {
+    margin: 0 2px; /* Minimize margin on smallest screens */
+  }
+}

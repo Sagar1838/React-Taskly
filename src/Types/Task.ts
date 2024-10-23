@@ -10,6 +10,7 @@ export interface Task {
   createdAt: string;
   updatedAt: string;
   deleteAt: string | null;
+  pageCount: string;
 }
 
 export interface TaskCreatedBy {
@@ -49,6 +50,14 @@ export interface TaskContextType {
     newStatus: "COMPLETED" | "PENDING" | "IN_PROGRESS"
   ) => Promise<void>;
   deleteTask: (taskId: string) => Promise<void>;
+  totalAssignTask: number;
+  totalCreatedTask: number;
+  totalCompletedTask: number;
+  totalOverdueTask: number;
+  totalTodayTask: number;
+  currentPage: number;
+  totalPages: number;
+  handlePageChange: (page: number) => void;
+  handleSort: (columnvalue: string) => void;
+  fetchTasks: (page: number) => void;
 }
-
-
