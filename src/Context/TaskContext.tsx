@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useMemo,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Task } from "../Types/Task";
 import baseURL from "../config";
@@ -34,15 +28,10 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [currentPage, setCurrentPage] = useState<number>(1); // State for current page
   const [totalPages, setTotalPages] = useState<number>(1); // State for total pages
-  const itemsPerPage = 50;
+  const itemsPerPage = 5;
   const [sortColumn, setSortColumn] = useState<string>("");
   const [sortOrder, setSortOrder] = useState<string>("ASC");
-  // console.log("sort colum value-----", sortColumn);
-  // console.log("sort order value-----", sortOrder);
-  // const combinedSort = `${sortColumn}=${sortOrder}`;
-  // console.log("sort task---------", combinedSort);
-  
-  // Retrieve the authentication token and userId from local storage
+  const combinedSort = `${sortColumn}=${sortOrder}`;
   const handleErrorResponse = (err: any) => {
     if (err.response) {
       const { data } = err.response;
@@ -54,7 +43,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const fetchTasks = async (page: number = 1, combinedSort: string = "") => {
+  const fetchTasks = async (newpage: number, combinedSort: string = "") => {
     if (!token || !userId) {
       console.error("No authentication token or user ID found.");
       return;
@@ -66,15 +55,13 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         {
           headers: { Authorization: `Bearer ${token} ` },
           params: {
-            page,
+            page: currentPage,
             limit: itemsPerPage,
-
-            // sortColumn: combinedSort,
           },
         }
       );
       // console.log("assignTo Me API", response.data);
-      // Map API response data into the Task structure
+
       const totalAssignTask = response?.data?.totalTask;
       setTotalAssignTask(totalAssignTask);
       if (response.data && Array.isArray(response.data.result)) {
@@ -103,19 +90,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-    fetchTasks(page); // Fetch tasks for the new page
-    fetchCreatedTasks(page);
-    fetchTodayTasks(page);
-    fetchOverdueTasks(page);
-    fetchCompletedTasks(page);
-  };
-
-  // Fetch tasks created by the current user
-
   const fetchCreatedTasks = async (
-    page: number = 1,
+    newpage: number,
     combinedSort: string = ""
   ) => {
     if (!token || !userId) {
@@ -131,13 +107,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         params: {
           TaskCreatedBy: userId,
-          page,
+          page: currentPage,
           limit: itemsPerPage,
-          // createdAt: "DESC",
         },
       });
-      // console.log("task created---", response.data);
-      // Check if the response is valid and update the createdTasks state
+      console.log("task created---", response.data.data.pageCount);
       //console.log("task created Me API", response.data);
       const totalCreatedTask = response?.data?.data?.totalTask;
       setCreatedtotalTask(totalCreatedTask);
@@ -152,7 +126,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
             createdBy: task.createdBy,
             assignedTo: task.assignedTo.name,
             status: Array.isArray(task.status) ? task.status : [task.status],
-            // pageCount: pageCount,
           })
         );
         setCreatedTasks(fetchedCreatedTasks);
@@ -175,7 +148,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch today tasks
 
   const fetchTodayTasks = async (
-    page: number = 1,
+    newpage: number,
     combinedSort: string = ""
   ) => {
     if (!token || !userId) return;
@@ -188,9 +161,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         params: {
           TodayTask: "",
-          page,
+          page: currentPage,
           limit: itemsPerPage,
-          // createdAt: "DESC",
         },
       });
 
@@ -200,8 +172,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       if (response.data && Array.isArray(response.data.data.result)) {
         const fetchedTodayTasks: Task[] = response.data.data.result.map(
           (task: any) => ({
-            // const fetchedTodayTasks: Task[] = Array.isArray(response.data.data.result)
-            //  ? response.data.data.result.map((task: any) => ({
             id: task.id,
             title: task.title,
             description: task.description,
@@ -212,11 +182,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
             status: Array.isArray(task.status) ? task.status : [task.status],
           })
         );
-        // : [];
         setTodayTasks(fetchedTodayTasks);
         setTotalPages(Math.ceil(totalAssignTask / itemsPerPage));
-        // if (fetchedTodayTasks.length === 0) {
-        // }
       } else {
         throw new Error("Unexpected response format");
       }
@@ -237,7 +204,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch overdue tasks
 
   const fetchOverdueTasks = async (
-    page: number = 1,
+    newpage: number,
     combinedSort: string = ""
   ) => {
     if (!token || !userId) return;
@@ -247,7 +214,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         headers: { Authorization: `Bearer ${token}` },
         params: {
           TaskOverDue: "",
-          page,
+          page: currentPage,
           limit: itemsPerPage,
           // createdAt: "DESC",
         },
@@ -289,17 +256,17 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch completed tasks
 
   const fetchCompletedTasks = async (
-    page: number = 1,
+    newpage: number,
     combinedSort: string = ""
   ) => {
     if (!token || !userId) return;
     setLoading(true);
     try {
       const response = await axios.get(`${baseURL}api/task?${combinedSort}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token} ` },
         params: {
           TaskCompleted: "",
-          page,
+          page: currentPage,
           limit: itemsPerPage,
           // createdAt: "DESC",
         },
@@ -341,23 +308,23 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
   // On component mount, fetch all tasks and their categories
   useEffect(() => {
     if (token && userId) {
-      fetchTasks(currentPage);
-      fetchCreatedTasks(currentPage);
-      fetchTodayTasks(currentPage);
-      fetchOverdueTasks(currentPage);
-      fetchCompletedTasks(currentPage);
+      fetchTasks(currentPage, combinedSort);
+      fetchCreatedTasks(currentPage, combinedSort);
+      fetchTodayTasks(currentPage, combinedSort);
+      fetchOverdueTasks(currentPage, combinedSort);
+      fetchCompletedTasks(currentPage, combinedSort);
     }
   }, [token, userId, currentPage]);
 
   // Memoize tasks to optimize re-renders
-  const memoizedTasks = useMemo(() => tasks, [tasks]);
-  const memoizedCreatedTasks = useMemo(() => createdTasks, [createdTasks]);
-  const memoizedTodayTasks = useMemo(() => todayTasks, [todayTasks]);
-  const memoizedOverdueTasks = useMemo(() => overdueTasks, [overdueTasks]);
-  const memoizedCompletedTasks = useMemo(
-    () => completedTasks,
-    [completedTasks]
-  );
+  // const memoizedTasks = useMemo(() => tasks, [tasks]);
+  // const memoizedCreatedTasks = useMemo(() => createdTasks, [createdTasks]);
+  // const memoizedTodayTasks = useMemo(() => todayTasks, [todayTasks]);
+  // const memoizedOverdueTasks = useMemo(() => overdueTasks, [overdueTasks]);
+  // const memoizedCompletedTasks = useMemo(
+  //   () => completedTasks,
+  //   [completedTasks]
+  // );
 
   //For create duplicate task
   const duplicateTask = async (taskId: string) => {
@@ -378,11 +345,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       await Promise.all([
-        fetchTasks(),
-        fetchCreatedTasks(),
-        fetchTodayTasks(),
-        fetchOverdueTasks(),
-        fetchCompletedTasks(),
+        fetchTasks(currentPage, combinedSort),
+        fetchCreatedTasks(currentPage, combinedSort),
+        fetchTodayTasks(currentPage, combinedSort),
+        fetchOverdueTasks(currentPage, combinedSort),
+        fetchCompletedTasks(currentPage, combinedSort),
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
@@ -413,11 +380,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       message.success("Task status updated successfully!");
 
       await Promise.all([
-        fetchTasks(),
-        fetchCreatedTasks(),
-        fetchTodayTasks(),
-        fetchOverdueTasks(),
-        fetchCompletedTasks(),
+        fetchTasks(currentPage, combinedSort),
+        fetchCreatedTasks(currentPage, combinedSort),
+        fetchTodayTasks(currentPage, combinedSort),
+        fetchOverdueTasks(currentPage, combinedSort),
+        fetchCompletedTasks(currentPage, combinedSort),
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
@@ -441,11 +408,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       message.success("Task deleted successfully!");
 
       await Promise.all([
-        fetchTasks(),
-        fetchCreatedTasks(),
-        fetchTodayTasks(),
-        fetchOverdueTasks(),
-        fetchCompletedTasks(),
+        fetchTasks(currentPage, combinedSort),
+        fetchCreatedTasks(currentPage, combinedSort),
+        fetchTodayTasks(currentPage, combinedSort),
+        fetchOverdueTasks(currentPage, combinedSort),
+        fetchCompletedTasks(currentPage, combinedSort),
       ]);
     } catch (err: any) {
       if (err.response?.data?.message === "Task not found") {
@@ -456,6 +423,16 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
       setLoading(false);
     }
   };
+  const handlePageClick = (data: { selected: any }, combinedSort: string) => {
+    const newpage = data.selected + 1;
+    setCurrentPage(newpage); // Pages are 0-based, so add 1
+    fetchTasks(newpage, combinedSort);
+    fetchCreatedTasks(newpage, combinedSort);
+    fetchTodayTasks(newpage, combinedSort);
+    fetchOverdueTasks(newpage, combinedSort);
+    fetchCompletedTasks(newpage, combinedSort);
+  };
+
   const handleSort = (columnvalue: string) => {
     const newOrder = sortOrder === "ASC" ? "DESC" : "ASC";
     const combinedSort = `${columnvalue}=${newOrder}`;
@@ -463,20 +440,21 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
     setSortOrder(newOrder);
 
     // Fetch tasks with the new sort
-    fetchTasks(1, combinedSort);
-    fetchCreatedTasks(1, combinedSort);
-    fetchTodayTasks(1, combinedSort);
-    fetchOverdueTasks(1, combinedSort);
-    fetchCompletedTasks(1, combinedSort);
+    fetchTasks(currentPage, combinedSort);
+    fetchCreatedTasks(currentPage, combinedSort);
+    fetchTodayTasks(currentPage, combinedSort);
+    fetchOverdueTasks(currentPage, combinedSort);
+    fetchCompletedTasks(currentPage, combinedSort);
   };
+
   return (
     <TaskContext.Provider
       value={{
-        tasks: memoizedTasks,
-        createdTasks: memoizedCreatedTasks,
-        todayTasks: memoizedTodayTasks,
-        overdueTasks: memoizedOverdueTasks,
-        completedTasks: memoizedCompletedTasks,
+        tasks,
+        createdTasks,
+        todayTasks,
+        overdueTasks,
+        completedTasks,
         loading,
         error,
         fetchCreatedTasks,
@@ -495,8 +473,11 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
         fetchTasks,
         currentPage,
         totalPages,
-        handlePageChange,
+        // handlePageChange,
         handleSort,
+        // setPageNumber: handleSetPageNumber,
+        // pageCount,
+        handlePageClick,
       }}
     >
       {children}
