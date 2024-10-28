@@ -192,6 +192,7 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
               <div className="error">{formik.errors.description}</div>
             )}
           </div>
+
           <div className="modal-field">
             <label>Assigned To</label>
             <div className="assignee-container">
@@ -231,12 +232,18 @@ const EditTaskModal: FC<EditTaskModalProps> = ({
           <div className="modal-field">
             <label>Estimated Hours</label>
             <input
-              type="text"
+              type="number"
               {...formik.getFieldProps("estimatedHours")}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (/^\d*$/.test(value) || value === "") {
-                  formik.setFieldValue("estimatedHours", value);
+              onKeyDown={(e) => {
+                // Prevent non-numeric keys like "e", "E", "+", "-", "."
+                if (
+                  e.key === "e" ||
+                  e.key === "E" ||
+                  e.key === "+" ||
+                  e.key === "-" ||
+                  e.key === "."
+                ) {
+                  e.preventDefault();
                 }
               }}
               placeholder="Estimated Hours"

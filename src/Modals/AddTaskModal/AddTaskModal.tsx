@@ -266,14 +266,20 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
                   </label>
                   <div className="input-group">
                     <input
-                      type="text"
+                      type="number"
                       className="form-control"
                       id="estimatedHours"
                       {...formik.getFieldProps("estimatedHours")}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (/^\d*$/.test(value) || value === "") {
-                          formik.setFieldValue("estimatedHours", value);
+                      onKeyDown={(e) => {
+                        // Prevent non-numeric keys like "e", "E", "+", "-", "."
+                        if (
+                          e.key === "e" ||
+                          e.key === "E" ||
+                          e.key === "+" ||
+                          e.key === "-" ||
+                          e.key === "."
+                        ) {
+                          e.preventDefault();
                         }
                       }}
                     />

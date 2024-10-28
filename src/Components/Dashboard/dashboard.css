@@ -106,7 +106,7 @@ nav.close ~ .dashboard .top {
 .dash-content .title {
   display: flex;
   align-items: center;
-  margin: 30px 0 30px 0;
+  margin: 15px 0 30px 0;
 }
 
 .dash-content .title i {
@@ -169,7 +169,9 @@ ol,
 ul {
   padding-left: 0rem;
 }
-
+.sortable-header {
+  cursor: pointer;
+}
 .react-tel-input .country-list {
   outline: none;
   z-index: 1;

@@ -15,8 +15,6 @@ import {
   FaTrash,
   FaInfoCircle,
   FaCopy,
-  FaSortUp,
-  FaSortDown,
 } from "react-icons/fa";
 import "./dashboard.css";
 import { ClipLoader } from "react-spinners";
@@ -34,7 +32,6 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
   const {
     tasks,
     loading,
-    error,
     createdTasks,
     todayTasks,
     overdueTasks,
@@ -48,6 +45,7 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
     updateTaskStatus,
     deleteTask,
     handleSort,
+    handlePageClick,
   } = useTaskContext();
   const [isaddModalOpen, setIsaddModalOpen] = useState(false);
   const [iseditModalOpen, setIseditModalOpen] = useState(false);
@@ -59,7 +57,7 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
   const [selectedCard, setSelectedCard] = useState<string>("assigned");
   const [displayLabel, setDisplayLabel] = useState<string>("Assigned By");
   const [noTasksMessage, setNoTasksMessage] = useState<string | null>(null);
-
+  const [count, setCount] = useState<number>(2);
   useEffect(() => {
     if (!auth) {
       navigate("/");
@@ -67,7 +65,6 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
   }, [auth, navigate]);
 
   useEffect(() => {
-    // Load tasks according to selected card when tasks change
     switch (selectedCard) {
       case "assigned":
         setDisplayedTasks(tasks);
@@ -154,18 +151,23 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
       setNoTasksMessage(
         tasks.length === 0 ? "No tasks found for assigned tasks." : null
       );
+      setCount(totalAssignTask / tasksPerPage);
     } else if (cardType === "today") {
       setDisplayLabel("Assigned By");
       handleFetchTodayTasks();
+      setCount(totalTodayTask / tasksPerPage);
     } else if (cardType === "overdue") {
       setDisplayLabel("Assigned By");
       handleFetchOverdueTasks();
+      setCount(totalOverdueTask / tasksPerPage);
     } else if (cardType === "completed") {
       setDisplayLabel("Assigned By");
       handleFetchCompletedTasks();
+      setCount(totalCompletedTask / tasksPerPage);
     } else if (cardType === "created") {
       setDisplayLabel("Assigned To");
       handleFetchCreatedTasks();
+      setCount(totalCreatedTask / tasksPerPage);
     }
     setCurrentPage(1);
   };
@@ -228,20 +230,6 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
     startIndex,
     startIndex + tasksPerPage
   );
-
-  console.log("current page----------", currentPage);
-
-  // const handlePrevPage = () => {
-  //   if (currentPage > 1) setCurrentPage(currentPage - 1);
-  // };
-
-  // const handleNextPage = () => {
-  //   if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  // };
-
-  const handlePageClick = (data: { selected: number }) => {
-    setCurrentPage(data.selected + 1); // Pages are 0-based, so add 1
-  };
 
   const handleDeleteTask = async (taskId: string) => {
     const taskToDelete = displayedTasks.find((t) => t.id === taskId);
@@ -306,26 +294,15 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
     createdAt: "ASC",
   });
 
-  // const handleSort = (columnvalue: keyof SortState) => {
-  //   // console.log("column value----------", columnvalue);
-  //   // console.log("order value----------", order);
-  //   // const currentOrder = sortState[columnvalue];
-  //   // const newOrder = currentOrder === "ASC" ? "DESC" : "ASC";
-  //   const newOrder = sortState[columnvalue] === "ASC" ? "DESC" : "ASC";
-  //   setSortState((prevState) => ({
-  //     ...prevState,
-  //     [columnvalue]: newOrder,
-  //   }));
+  const handleColumnSort = (columnValue: keyof SortState) => {
+    const newOrder = sortState[columnValue] === "ASC" ? "DESC" : "ASC";
+    setSortState((prevState) => ({
+      ...prevState,
+      [columnValue]: newOrder,
+    }));
 
-  //   // Update the sort state
-  //   // sortState[columnvalue] = newOrder;
-  //   setSortColumn(columnvalue);
-  //   setSortOrder(newOrder);
-  //   const combinedSort = `${columnvalue}=${newOrder}`;
-  //   console.log("sort dashboard---------", combinedSort);
-  // };
-
-  // if (error) return <div>Error: {error}</div>;
+    handleSort(columnValue);
+  };
   return (
     <>
       {auth ? (
@@ -410,15 +387,24 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
                       <thead>
                         <tr>
                           <th>Task Name</th>
-                          <th onClick={() => handleSort("estimatedHours")}>
-                            Estimated Hours
+                          <th
+                            onClick={() => handleColumnSort("estimatedHours")}
+                            className="sortable-header"
+                          >
+                            Estimated Hours{" "}
                             {sortState["estimatedHours"] === "ASC" ? "▲" : "▼"}
                           </th>
-                          <th onClick={() => handleSort("dueDate")}>
+                          <th
+                            onClick={() => handleColumnSort("dueDate")}
+                            className="sortable-header"
+                          >
                             Due On {sortState["dueDate"] === "ASC" ? "▲" : "▼"}
                           </th>
-                          <th onClick={() => handleSort("createdAt")}>
-                            {displayLabel}
+                          <th
+                            onClick={() => handleColumnSort("createdAt")}
+                            className="sortable-header"
+                          >
+                            {displayLabel}{" "}
                             {sortState["createdAt"] === "ASC" ? "▲" : "▼"}
                           </th>
                           <th>Status</th>
@@ -500,15 +486,15 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
                     previousLabel={"Previous"}
                     nextLabel={"Next"}
                     breakLabel={"..."}
-                    pageCount={totalPages} // Number of total pages
+                    pageCount={count}
                     marginPagesDisplayed={2}
-                    pageRangeDisplayed={3}
+                    pageRangeDisplayed={count}
                     onPageChange={handlePageClick}
                     containerClassName={"pagination"}
                     activeClassName={"active"}
                     pageLinkClassName={"page-link"}
-                    previousLinkClassName={"prev-link"}
-                    nextLinkClassName={"next-link"}
+                    previousLinkClassName={handlePageClick}
+                    nextLinkClassName={handlePageClick}
                     breakLinkClassName={"break-link"}
                   />
                 </div>
