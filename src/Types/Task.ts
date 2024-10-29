@@ -1,3 +1,5 @@
+
+
 export interface Task {
   id: string;
   title: string;
@@ -57,11 +59,7 @@ export interface TaskContextType {
   totalTodayTask: number;
   currentPage: number;
   totalPages: number;
-  // handlePageChange: (page: number) => void;
   handleSort: (columnvalue: string) => void;
   fetchTasks: (newpage: number, combinedSort: string) => void;
-  // setPageNumber: (pageNumber: number) => void;
-  // pageCount: number;
   handlePageClick: any;
-  // combinedSort:string
 }

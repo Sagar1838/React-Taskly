@@ -138,32 +138,24 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose }) => {
     }
   }, [searchTerm, users]);
 
-  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchTerm(e.target.value);
-  //   formik.setFieldValue("assignee", "");
-  // };
-  // const handleAssigneeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   const selectedUserId = e.target.value;
-  //   formik.setFieldValue("assignedTo", selectedUserId);
-  // };
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    setIsDropdownOpen(true); // Open dropdown when typing
+    setIsDropdownOpen(true); 
   };
 
   const handleOptionClick = (user: { id: string; name: string }) => {
-    formik.setFieldValue("assignedTo", user.id); // Set the assignedTo value
-    setSearchTerm(user.name); // Update the search term
-    setIsDropdownOpen(false); // Close the dropdown
+    formik.setFieldValue("assignedTo", user.id); 
+    setSearchTerm(user.name); 
+    setIsDropdownOpen(false); 
   };
 
   const handleInputFocus = () => {
-    setIsDropdownOpen(true); // Open dropdown when input is focused
+    setIsDropdownOpen(true); 
   };
 
   const handleInputBlur = () => {
     setTimeout(() => {
-      setIsDropdownOpen(false); // Delay closing to allow option click
+      setIsDropdownOpen(false);
     }, 100);
   };
 

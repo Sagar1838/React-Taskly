@@ -751,7 +751,7 @@ body.dark .pages {
   justify-content: center;
   list-style-type: none;
   padding: 0;
-  flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+  flex-wrap: wrap;
 }
 
 .pagination li {
@@ -763,7 +763,7 @@ body.dark .pages {
   border: 1px solid #ddd;
   cursor: pointer;
   text-decoration: none;
-  font-size: 16px; /* Base font size */
+  font-size: 16px;
   transition: background-color 0.3s;
 }
 
@@ -780,22 +780,22 @@ body.dark .pages {
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .pagination a {
-    padding: 6px 12px; /* Slightly smaller padding for smaller screens */
-    font-size: 14px; /* Reduce font size for better fit */
+    padding: 6px 12px;
+    font-size: 14px;
   }
 
   .pagination li {
-    margin: 0 3px; /* Reduce margins for more space */
+    margin: 0 3px;
   }
 }
 
 @media (max-width: 480px) {
   .pagination a {
-    padding: 4px 8px; /* Even smaller padding for very small screens */
-    font-size: 12px; /* Smaller font size for very small screens */
+    padding: 4px 8px;
+    font-size: 12px;
   }
 
   .pagination li {
-    margin: 0 2px; /* Minimize margin on smallest screens */
+    margin: 0 2px;
   }
 }

@@ -41,7 +41,6 @@ export const AddTaskProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const addTask = async (task: Partial<Task>) => {
     try {
-      // const response = await axios.post(`${baseURL}api/task`, task, {
       const response = await axios.post(`${baseURL}api/task`, task, {
         headers: {
           Authorization: `Bearer ${token}`,

@@ -224,7 +224,7 @@ const Dashboard: FC<DashboardProps> = ({ isSidebarClosed }) => {
     updateTasksForSelectedCard();
   };
 
-  const totalPages = Math.ceil(displayedTasks.length / tasksPerPage);
+  //const totalPages = Math.ceil(displayedTasks.length / tasksPerPage);
   const startIndex = (currentPage - 1) * tasksPerPage;
   const currentTasks = displayedTasks.slice(
     startIndex,

@@ -29,10 +29,6 @@ export const EditTaskProvider: FC<{ children: ReactNode }> = ({ children }) => {
         `${baseURL}api/task/updatetask/${taskId}`,
         updatedTask,
         {
-          // const response = await axios.patch(
-          //   `${baseURL}api/task/updatetask/${taskId}`,
-          //   updatedTask,
-          //   {
           headers: {
             Authorization: `Bearer ${token}`,
           },
