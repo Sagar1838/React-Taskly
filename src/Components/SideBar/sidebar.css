@@ -158,13 +158,13 @@ body.dark .logout-mode {
     width: 200px;
     position: fixed;
     top: 0;
-    left: -200px; /* Hide the sidebar */
+    left: -200px;
     transition: left 0.3s ease;
   }
 
   /* When sidebar is open */
   nav.open {
-    left: 0; /* Slide sidebar into view */
+    left: 0; 
   }
 
   /* Adjust content for sidebar closing */

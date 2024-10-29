@@ -184,16 +184,16 @@ button:hover {
 
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* Position below the input */
+  top: 100%; 
   left: 0;
   right: 0;
   background: white;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  max-height: 150px; /* Max height for the dropdown */
-  overflow-y: auto; /* Enable scrolling for long lists */
-  z-index: 1001; /* Ensure it appears above the modal */
+  max-height: 150px; 
+  overflow-y: auto; 
+  z-index: 1001;
 }
 
 .dropdown-item {
@@ -203,7 +203,7 @@ button:hover {
 }
 
 .dropdown-item:hover {
-  background-color: #f0f0f0; /* Light gray on hover */
+  background-color: #f0f0f0;
 }
 .no-results {
   padding: 10px;
